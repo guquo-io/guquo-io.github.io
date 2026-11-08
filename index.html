@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gustavo Zuqueto</title>
+<meta name="description" content="Portfólio de Gustavo Zuqueto: apps e automações com IA que nasceram de problemas reais. Goliad, Pooly, Beluga e Urbas.">
+<style>
+/* Base: margens zeradas e área segura do celular (antes de tudo) */
+:root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; padding: 0; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #000; }
+img { max-width: 100%; }
+[hidden]:not([hidden=until-found i]) { display: none !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap">
+<style>
+/* Layout: nome como título central sobre luz fluida; vitrine 2x2 de projetos em vidro que inclinam com o cursor; clicar abre uma folha (sheet) com vídeo e a história em tópicos; depois experiência, sobre e contato */
+:root {
+  --bg: #EFEBE6;
+  --fg: #1D1D1F;
+  --muted: #57575C;
+  --line: rgba(29,29,31,.10);
+  --glass: rgba(255,255,255,.48);
+  --glass-in: rgba(255,255,255,.42);
+  --edge: rgba(255,255,255,.80);
+  --sheet: #F8F6F3;
+  --link: #0066CC;
+  --g1: rgba(92,140,235,.55);
+  --g2: rgba(110,205,220,.45);
+  --g3: rgba(176,150,235,.38);
+  --g4: rgba(235,200,160,.45);
+  --shadow: 0 1px 2px rgba(60,40,20,.05), 0 30px 60px -34px rgba(60,50,80,.35);
+  color-scheme: light;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html.locked { overflow: hidden; }
+html { scrollbar-gutter: stable; }
+body {
+  margin: 0;
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-optical-sizing: auto;
+  font-size: 1.0625rem; line-height: 1.47; letter-spacing: -0.011em; -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 12px; }
+
+/* luz fluida */
+.light { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.light i { position: absolute; border-radius: 50%; filter: blur(90px); }
+.light i:nth-child(1) { width: 60vmax; height: 50vmax; left: -10vmax; top: -22vmax; background: var(--g1); }
+.light i:nth-child(2) { width: 44vmax; height: 44vmax; right: -14vmax; top: 4vh; background: var(--g2); }
+.light i:nth-child(3) { width: 40vmax; height: 36vmax; left: 30vw; top: 30vh; background: var(--g3); }
+.light i:nth-child(4) { width: 50vmax; height: 40vmax; left: -16vmax; bottom: -20vmax; background: var(--g4); }
+@media (prefers-reduced-motion: no-preference) {
+  .light i { animation: flow 32s ease-in-out infinite alternate; }
+  .light i:nth-child(2) { animation-duration: 40s; animation-delay: -8s; }
+  .light i:nth-child(3) { animation-duration: 46s; animation-delay: -16s; }
+  .light i:nth-child(4) { animation-duration: 38s; }
+  @keyframes flow { 50% { transform: translate3d(6vmax, 4vmax, 0) scale(1.08); } 100% { transform: translate3d(-3vmax, 6vmax, 0) scale(.96); } }
+}
+
+.wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; }
+.glass {
+  background: var(--glass); border: 1px solid var(--edge);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4); backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: inset 0 1px 0 var(--edge), var(--shadow);
+}
+
+/* navegação: o nome aparece aqui só depois que o título sai da tela */
+.nav {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); z-index: 9; margin: 32px auto 0; width: fit-content; max-width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 0;
+  padding: 4px; border-radius: 999px; font-size: 0.8125rem;
+}
+.nav .me { font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; padding: 0; transition: max-width .45s cubic-bezier(.2,.8,.2,1), opacity .3s, padding .45s; }
+.nav.named .me { max-width: 160px; opacity: 1; padding: 0 10px 0 12px; }
+.nav nav { display: flex; gap: 0; }
+.nav nav a { color: var(--fg); padding: 5px 12px; border-radius: 999px; opacity: .8; transition: background .2s, opacity .2s; }
+.nav nav a:hover { text-decoration: none; opacity: 1; background: var(--glass-in); }
+
+/* título */
+.hero { min-height: 86svh; display: grid; place-content: center; justify-items: center; text-align: center; gap: 18px; padding-block: clamp(40px, 8vh, 96px) 56px; }
+.eyebrow { margin: 0; font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; color: var(--muted); }
+.avatar { display: block; width: 120px; height: 120px; margin-bottom: 6px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 5px rgba(255,255,255,.55), var(--shadow); }
+.hero h1 { margin: 0; font-weight: 700; font-size: clamp(3rem, 11vw, 7.75rem); line-height: 1; letter-spacing: -0.045em; text-wrap: balance; }
+.hero .lead { margin: 4px 0 0; font-weight: 600; font-size: clamp(1.5rem, 3.6vw, 2.5rem); line-height: 1.12; letter-spacing: -0.03em; max-width: 22ch; text-wrap: balance; }
+.grad { background: linear-gradient(90deg, #3E6FE0, #7B5CE0 55%, #2BA8C2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero .sub { margin: 6px 0 0; max-width: 46ch; color: var(--muted); font-size: 1.1875rem; line-height: 1.45; text-wrap: pretty; }
+.cta { margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; background: var(--fg); color: var(--bg); font-weight: 500; font-size: 1rem; }
+.cta:hover { text-decoration: none; opacity: .88; }
+.cta svg { width: 14px; height: 14px; }
+
+/* cabeçalho de seção */
+.label { display: grid; gap: 8px; padding-block: 96px 32px; scroll-margin-top: 70px; }
+.label h2 { margin: 0; font-weight: 700; font-size: clamp(2.25rem, 5.6vw, 3.5rem); line-height: 1.05; letter-spacing: -0.035em; }
+.label p { margin: 0; color: var(--muted); font-size: 1.1875rem; }
+
+/* vitrine de projetos */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; perspective: 1400px; }
+.tile {
+  all: unset; box-sizing: border-box; cursor: pointer; position: relative; overflow: hidden;
+  display: grid; grid-template-rows: auto 1fr auto; gap: 22px; min-height: 360px; padding: 28px; border-radius: 32px;
+  transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)) translateY(var(--lift, 0px));
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .4s;
+}
+.tile::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .9; background: radial-gradient(120% 90% at 100% 0%, var(--m1), transparent 60%), radial-gradient(90% 80% at 0% 100%, var(--m2), transparent 65%); }
+.tile:hover { --lift: -4px; box-shadow: inset 0 1px 0 var(--edge), 0 40px 70px -36px rgba(60,50,90,.5); }
+.tile:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+.tile .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.tile h3 { margin: 0; font-weight: 700; font-size: clamp(2rem, 3.6vw, 2.75rem); line-height: 1; letter-spacing: -0.04em; }
+.tile .tag { margin: 8px 0 0; color: var(--muted); font-size: 1.0625rem; }
+.tile .bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.tile .metric b { display: block; font-weight: 700; font-size: 1.75rem; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.tile .metric span { font-size: 0.875rem; color: var(--muted); }
+.plus { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: var(--bg); transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.plus svg { width: 16px; height: 16px; }
+.tile:hover .plus { transform: rotate(90deg) scale(1.06); }
+
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--edge); background: var(--glass-in); font-size: 0.8125rem; font-weight: 500; letter-spacing: -0.005em; white-space: nowrap; }
+.chip.wait { --dot: #C9A25C; }
+
+/* ícone que inclina */
+.icon { width: 84px; height: 84px; flex: none; }
+.icon .face {
+  position: relative; width: 100%; height: 100%; border-radius: 22px; overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 16px 26px -14px rgba(50,70,150,.45);
+  background: linear-gradient(150deg, #FFFFFF, #E9ECF5);
+}
+.icon .face > img, .icon .face > svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.icon .face::before { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); pointer-events: none; z-index: 2; }
+.icon.soon .face { background: linear-gradient(150deg, rgba(255,255,255,.75), rgba(230,224,216,.92)); display: grid; place-items: center; }
+.icon.soon .face span { font-size: 0.6875rem; color: #6E6E73; font-weight: 500; }
+
+/* folha do projeto */
+dialog.sheet {
+  padding: 0; border: 1px solid var(--edge); margin: auto; width: min(900px, calc(100vw - 32px)); max-width: none;
+  max-height: calc(100dvh - 48px); border-radius: 32px; overflow: hidden; color: var(--fg);
+  background: var(--sheet); box-shadow: 0 50px 100px -30px rgba(20,16,40,.45);
+  transform-origin: 50% 0; will-change: transform, opacity; backface-visibility: hidden;
+}
+dialog.sheet::backdrop { background: transparent; }
+.scrim { position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: 0; background: rgba(20,16,12,.30); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); visibility: hidden; }
+.scrim.on { visibility: visible; }
+.sheet .scroll { max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.sheet .scroll::-webkit-scrollbar { display: none; }
+.more {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; height: 96px; pointer-events: none;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 16px;
+  background: linear-gradient(to bottom, transparent, var(--sheet) 78%); transition: opacity .3s;
+}
+.more span { pointer-events: auto; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; font-size: 0.8125rem; font-weight: 500; background: var(--glass); border: 1px solid var(--edge); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.more svg { width: 12px; height: 12px; }
+.more.gone { opacity: 0; }
+.more.gone span { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { .more span svg { animation: nudge 1.8s ease-in-out infinite; } @keyframes nudge { 50% { transform: translateY(3px); } } }
+.close { position: absolute; top: 14px; right: 14px; z-index: 5; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--edge); background: var(--glass); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); color: var(--fg); display: grid; place-items: center; cursor: pointer; }
+.close svg { width: 14px; height: 14px; }
+.media { position: relative; aspect-ratio: 16 / 9; display: grid; place-items: center; background: linear-gradient(135deg, var(--m1), var(--m2) 55%, var(--m3)); }
+.media span { font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 999px; background: var(--glass); border: 1px solid var(--edge); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.shots img { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 22px; border: 1px solid var(--edge); background: var(--glass-in); box-shadow: 0 1px 2px rgba(60,40,20,.05), 0 20px 40px -28px rgba(60,50,80,.35); }
+.detail { padding: clamp(24px, 4.5vw, 52px); display: grid; gap: 36px; }
+.dhead { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; }
+.dhead h2 { margin: 0; font-weight: 700; font-size: clamp(2.25rem, 5vw, 3.25rem); line-height: 1; letter-spacing: -0.04em; }
+.dhead p { margin: 8px 0 0; color: var(--muted); font-size: 1.1875rem; }
+.dmeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.tool { padding: 5px 11px; border-radius: 999px; font-size: 0.8125rem; color: var(--muted); border: 1px solid var(--line); }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.block { padding: 24px 26px; border-radius: 22px; background: var(--glass-in); border: 1px solid var(--edge); display: grid; gap: 12px; align-content: start; min-width: 0; }
+.block h3 { margin: 0; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+.points { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.points li { position: relative; padding-left: 20px; text-wrap: pretty; }
+.points li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); }
+.stat { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.stat b { font-weight: 700; font-size: clamp(2.5rem, 6vw, 3.5rem); line-height: 1; letter-spacing: -0.045em; color: var(--acc); }
+.stat span { color: var(--muted); font-size: 1.0625rem; }
+.pager { display: flex; justify-content: space-between; gap: 12px; padding: 0 clamp(24px, 4.5vw, 52px) clamp(24px, 4vw, 40px); }
+.pager button { all: unset; cursor: pointer; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.9375rem; font-weight: 500; }
+.pager button:hover { background: var(--glass-in); }
+.pager button:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+
+/* experiência */
+.exp { border-radius: 32px; padding: clamp(26px, 4vw, 48px); display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: 40px; }
+.exp .side { display: grid; gap: 8px; align-content: start; }
+.exp .side h3 { margin: 0 0 4px; font-weight: 700; font-size: 2rem; line-height: 1.05; letter-spacing: -0.035em; }
+.exp .side p { margin: 0; font-size: 0.9375rem; color: var(--muted); }
+.exp .main { display: grid; gap: 24px; min-width: 0; --acc: #3E6FE0; }
+.nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.nums div { padding: 18px 20px; border-radius: 20px; background: var(--glass-in); border: 1px solid var(--edge); }
+.nums b { display: block; font-weight: 700; font-size: 1.875rem; line-height: 1.05; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
+.nums small { font-size: 0.875rem; color: var(--muted); }
+
+/* sobre e contato */
+.about { border-radius: 32px; padding: clamp(26px, 4vw, 48px); display: grid; gap: 16px; }
+.about p { margin: 0; max-width: 60ch; font-size: 1.3125rem; line-height: 1.45; letter-spacing: -0.02em; text-wrap: pretty; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; max-width: 60ch; counter-reset: passo; }
+.steps li { counter-increment: passo; display: flex; align-items: center; gap: 14px; font-size: 1.3125rem; letter-spacing: -0.02em; line-height: 1.4; text-wrap: pretty; }
+.steps li::before { content: counter(passo); flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 0.875rem; font-weight: 600; background: var(--glass-in); border: 1px solid var(--edge); font-variant-numeric: tabular-nums; }
+footer { padding-block: 110px 80px; display: grid; gap: 24px; justify-items: center; text-align: center; }
+footer h2 { margin: 0; font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1; letter-spacing: -0.045em; }
+.quip { margin: 0; font-weight: 500; text-wrap: pretty; }
+.foot-quip { margin: -8px 0 4px; color: var(--muted); font-size: 1.1875rem; }
+.contacts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.contacts > * { padding: 12px 22px; border-radius: 999px; font-size: 1rem; color: var(--fg); }
+.contacts .mail { user-select: all; }
+.contacts a { color: var(--link); }
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .tile { min-height: 300px; padding: 22px; border-radius: 28px; }
+  .cols, .exp { grid-template-columns: minmax(0, 1fr); }
+  .exp { gap: 22px; }
+  .icon { width: 72px; height: 72px; }
+  .dhead { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .nav nav a { padding: 5px 10px; }
+  dialog.sheet { width: 100%; margin: auto 0 0; max-height: 94dvh; border-radius: 28px 28px 0 0; }
+  .sheet .scroll { max-height: 94dvh; }
+  .shots { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .shots img { max-width: 320px; }
+  .label { padding-block: 72px 24px; }
+  .avatar { width: 112px; height: 112px; }
+}
+@media (max-width: 420px) { .nav .me { display: none; } .nums { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .tile, .plus, .nav .me { transition: none; }
+}
+/* entrada da página: luz acende, nome surge letra a letra saindo do desfoque, depois o resto em cascata */
+.hero h1 .w { white-space: nowrap; }
+.hero h1 .ch { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .light { animation: lightIn 1.8s ease both; }
+  .nav { animation: upIn .9s 1.15s cubic-bezier(.2,.8,.2,1) both; }
+  .hero .avatar { animation: upIn 1s .05s cubic-bezier(.2,.8,.2,1) both; }
+  .hero h1 .ch { animation: chIn 1.2s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * 38ms + 180ms); }
+  .hero .lead { animation: upIn 1s .85s cubic-bezier(.2,.8,.2,1) both; }
+  .hero .sub { animation: upIn 1s 1s cubic-bezier(.2,.8,.2,1) both; }
+  .hero .cta { animation: upIn 1s 1.15s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes lightIn { from { opacity: 0; } }
+  @keyframes chIn { from { opacity: 0; filter: blur(14px); transform: translate3d(0, .32em, 0) scale(.96); } }
+  @keyframes upIn { from { opacity: 0; filter: blur(8px); transform: translate3d(0, 18px, 0); } }
+}
+</style>
+</head>
+<body>
+
+<div class="light" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<div class="wrap">
+  <header class="nav glass" id="nav">
+    <span class="me">Gustavo Zuqueto</span>
+    <nav aria-label="Seções"><a href="#projetos">Projetos</a><a href="#experiencia">Experiência</a><a href="#contato">Contato</a></nav>
+  </header>
+
+  <section class="hero">
+    <img class="avatar" src="img/avatar.webp" alt="Foto de Gustavo Zuqueto" width="120" height="120">
+    <h1 id="titulo" aria-label="Gustavo Zuqueto"><span aria-hidden="true"><span class="w"><span class="ch" style="--i:0">G</span><span class="ch" style="--i:1">u</span><span class="ch" style="--i:2">s</span><span class="ch" style="--i:3">t</span><span class="ch" style="--i:4">a</span><span class="ch" style="--i:5">v</span><span class="ch" style="--i:6">o</span></span> <span class="w"><span class="ch" style="--i:7">Z</span><span class="ch" style="--i:8">u</span><span class="ch" style="--i:9">q</span><span class="ch" style="--i:10">u</span><span class="ch" style="--i:11">e</span><span class="ch" style="--i:12">t</span><span class="ch" style="--i:13">o</span></span></span></h1>
+    <p class="lead">Eu transformo processo manual em <span class="grad">ferramenta</span>.</p>
+    <p class="sub">Construo apps e automações com IA, o que muita gente chama de vibe coding. Começo por problemas pequenos e reais: o recibo de um piscineiro, a roupa que eu esperava baixar de preço, a rega de uma horta.</p>
+    <a class="cta" href="#projetos">Escolher um projeto <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5"/></svg></a>
+  </section>
+
+  <div class="label" id="projetos">
+    <h2>Escolha um projeto</h2>
+    <p>Cada um nasceu de uma dor real. Abra para ver a história.</p>
+  </div>
+
+  <main class="grid">
+    <button class="tile glass" data-open="goliad" style="--m1:rgba(240,141,196,.30);--m2:rgba(176,150,235,.22)" aria-label="Abrir Goliad">
+      <div class="top"><div class="icon"><div class="face"><img src="img/icone-goliad.webp" alt=""></div></div><span class="chip">Uso pessoal</span></div>
+      <div><h3>Goliad</h3><p class="tag">Monitor de preços com IA, no Telegram.</p></div>
+      <div class="bottom"><div class="metric"><b>1 h</b><span>entre cada conferência</span></div><span class="plus" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span></div>
+    </button>
+
+    <button class="tile glass" data-open="pooly" style="--m1:rgba(92,140,235,.30);--m2:rgba(110,205,220,.24)" aria-label="Abrir Pooly">
+      <div class="top"><div class="icon"><div class="face"><img src="img/icone-pooly.webp" alt=""></div></div><span class="chip">Em uso real</span></div>
+      <div><h3>Pooly</h3><p class="tag">Gestão para piscineiros.</p></div>
+      <div class="bottom"><div class="metric"><b>4 h</b><span>por semana que voltaram pra mim</span></div><span class="plus" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span></div>
+    </button>
+
+    <button class="tile glass" data-open="beluga" style="--m1:rgba(140,180,245,.30);--m2:rgba(200,180,240,.24)" aria-label="Abrir Beluga">
+      <div class="top"><div class="icon"><div class="face"><img src="img/icone-beluga.webp" alt=""></div></div><span class="chip">6 usuários</span></div>
+      <div><h3>Beluga</h3><p class="tag">Controle financeiro pessoal.</p></div>
+      <div class="bottom"><div class="metric"><b>6</b><span>pessoas usando</span></div><span class="plus" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span></div>
+    </button>
+
+    <button class="tile glass" data-open="urbas" style="--m1:rgba(120,200,160,.28);--m2:rgba(235,210,160,.26)" aria-label="Abrir Urbas">
+      <div class="top"><div class="icon"><div class="face"><img src="img/icone-urbas.webp" alt="Ícone do Urbas"></div></div><span class="chip wait">Projeto em grupo</span></div>
+      <div><h3>Urbas</h3><p class="tag">App de hortas urbanas, extensão na Unicamp.</p></div>
+      <div class="bottom"><div class="metric"><b>100%</b><span>da parte digital é minha</span></div><span class="plus" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></span></div>
+    </button>
+  </main>
+
+  <div class="label" id="experiencia">
+    <h2>Experiência</h2>
+    <p>Antes do código, já era isso que eu fazia.</p>
+  </div>
+
+  <section class="exp glass">
+    <div class="side">
+      <h3>Procter &amp; Gamble</h3>
+      <p>Estágio técnico em meio ambiente</p>
+      <p>Louveira, SP</p>
+      <p>ago/2021 – fev/2023 · 1 ano e 7 meses</p>
+      <div class="dmeta"><span class="tool">Power Apps</span><span class="tool">Power Automate</span><span class="tool">SharePoint</span><span class="tool">Power BI</span></div>
+    </div>
+    <div class="main">
+      <ul class="points">
+        <li><b>Alerta de periculosidade automático.</b> Antes corria por mensagem e boca a boca. Quando o sinal mudava para amarelo ou vermelho, a ferramenta passou a avisar sozinha as pessoas certas.</li>
+        <li><b>App de pedidos.</b> Pedidos de alteração na planta e de MTR, que se perdiam em e-mails, ganharam um app próprio, com aviso de aprovado, negado ou ajuste.</li>
+        <li>As duas ferramentas passaram a ser usadas pela planta inteira.</li>
+        <li>Reformei o app de cadastro de produtos químicos, que tinha parado de funcionar.</li>
+      </ul>
+      <div class="nums">
+        <div><b>196 → 94 min</b><small>rota de coleta de resíduos redesenhada. Mesmo resíduo, metade do caminho.</small></div>
+        <div><b>Efetivado</b><small>ao fim do estágio; saí para cursar a Unicamp em período integral</small></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="label" id="sobre"><h2>Sobre</h2></div>
+  <section class="about glass">
+    <p>Estudo Engenharia Agrícola na Unicamp. Em julho de 2026 percebi que o que eu mais gosto de fazer é o que eu já fazia na P&amp;G: olhar para um processo que dá trabalho e transformar em ferramenta.</p>
+    <p>Eu já tinha começado a construir com IA depois de uma palestra sobre o Gemini na Unicamp: era o mesmo trabalho da P&amp;G, agora sem os limites das ferramentas low-code. Hoje aprendo testando: defino as regras, testo cada uma e corrijo quando a ferramenta erra.</p>
+  </section>
+
+  <div class="label"><h2>O que estou estudando</h2></div>
+  <section class="about glass">
+    <p>Aprendi os princípios de programação numa matéria de Python na Unicamp, resolvendo problemas com código. Em julho comecei a estudar por conta própria: terminei HTML no freeCodeCamp e agora estou em CSS. Também estudo o código dos meus próprios projetos para entender como ele funciona.</p>
+    <p>O que eu mais gosto é construir o produto inteiro: a tela que a pessoa usa e a lógica, os dados e as automações por trás.</p>
+  </section>
+
+  <div class="label"><h2>Próximos passos</h2></div>
+  <section class="about glass">
+    <ol class="steps">
+      <li>CSS avançado, design responsivo e JavaScript (Origamid)</li>
+      <li>Git, GitHub e ambiente de desenvolvimento (The Odin Project)</li>
+      <li>React e TypeScript</li>
+      <li>SQL/PostgreSQL e APIs em Python (FastAPI)</li>
+    </ol>
+  </section>
+
+  <footer id="contato">
+    <h2>Vamos conversar?</h2>
+    <p class="foot-quip">Respondo mais rápido do que o Goliad avisa.</p>
+    <div class="contacts">
+      <span class="mail glass">zuqueto7@gmail.com</span>
+      <a class="glass" href="https://www.linkedin.com/in/gustavozuqueto/">LinkedIn</a>
+    </div>
+  </footer>
+</div>
+
+<div class="scrim" aria-hidden="true"></div>
+<dialog class="sheet" id="sheet">
+  <button class="close" type="button" aria-label="Fechar"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l10 10M12 2 2 12"/></svg></button>
+  <div class="more" aria-hidden="true"><span>Role para ver mais <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></span></div>
+  <div class="scroll">
+    <div class="content"></div>
+    <div class="pager"><button type="button" data-go="-1"></button><button type="button" data-go="1"></button></div>
+  </div>
+</dialog>
+
+<template id="t-goliad">
+  <div style="--m1:rgba(240,141,196,.5);--m2:rgba(176,150,235,.4);--m3:rgba(110,205,220,.38);--acc:#D9549B">
+    <div class="media"><iframe src="https://www.youtube-nocookie.com/embed/QFGx6bLB2qA?rel=0&amp;playsinline=1" title="Trailer do Goliad" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+    <div class="detail">
+      <div class="shots"><img src="img/goliad-1.webp" alt="Conversa com o bot do Goliad cadastrando um produto pelo link" width="458" height="816" decoding="async"><img src="img/goliad-2.webp" alt="Alerta do Goliad ao lado da página da loja, com o mesmo preço" width="458" height="818" decoding="async"><img src="img/goliad-3.webp" alt="Alerta do Goliad no Telegram, com uma frase curta escrita pela IA" width="456" height="817" decoding="async"></div>
+      <div class="dhead">
+        <div class="icon"><div class="face"><img src="img/icone-goliad.webp" alt="Ícone do Goliad"></div></div>
+        <div><h2 id="h-goliad">Goliad</h2><p>Monitor de preços com IA, no Telegram.</p>
+          <div class="dmeta"><span class="chip">Uso pessoal · nov/2026</span><span class="tool">n8n</span><span class="tool">Gemini API</span><span class="tool">Telegram Bot API</span><span class="tool">Google Sheets</span><span class="tool">OAuth2</span><a class="tool" href="https://github.com/guquo-io/goliad" target="_blank" rel="noopener" style="color:var(--acc);border-color:var(--acc);font-weight:500">Ver código no GitHub ↗</a></div></div>
+      </div>
+      <div class="cols">
+        <div class="block"><h3>O problema</h3><ul class="points">
+          <li>Eu gosto de coisas que nem sempre estão no meu alcance financeiro.</li>
+          <li>Ficava abrindo as mesmas lojas várias vezes para ver se o preço tinha baixado.</li>
+          <li>Quando finalmente ficava acessível, o meu tamanho já tinha acabado.</li></ul></div>
+        <div class="block"><h3>O que ele faz</h3><ul class="points">
+          <li>Acompanha o preço do que eu quero e me avisa quando fica acessível pra mim.</li>
+          <li>Confere preço e estoque do meu tamanho de hora em hora, para que eu não precise.</li>
+          <li>Guarda o histórico de preços.</li>
+          <li>Só me avisa no Telegram quando algo muda.</li>
+          <li>Eu cadastro um produto mandando o link para o bot.</li></ul></div>
+      </div>
+      <div class="block"><h3>Decisões</h3><ul class="points">
+        <li>A IA só escreve um comentário curto sobre a oferta. Preço, desconto e link vêm do sistema, porque num alerta de preço um número inventado destrói a confiança.</li>
+        <li>Se a IA estiver fora do ar, o alerta sai do mesmo jeito.</li>
+        <li>Comecei verificando a cada 15 minutos. Quando a loja passou a recusar as visitas automáticas, reduzi para 1 hora, que basta para preço de roupa, em vez de tentar driblar a proteção dela.</li>
+        <li>Hoje ele roda no n8n do meu computador, enquanto ele está ligado.</li></ul></div>
+    </div>
+  </div>
+</template>
+
+<template id="t-pooly">
+  <div style="--m1:rgba(92,140,235,.5);--m2:rgba(110,205,220,.42);--m3:rgba(235,200,160,.38);--acc:#2F7FE0">
+    <div class="media"><iframe src="https://www.youtube-nocookie.com/embed/-umEQHy-oE0?rel=0&amp;playsinline=1" title="Trailer do Pooly" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+    <div class="detail">
+      <div class="shots"><img src="img/pooly-1.webp" alt="Tela inicial do Pooly com o próximo serviço e as cobranças chegando" width="479" height="863" decoding="async"><img src="img/pooly-2.webp" alt="Tela de orçamento do Pooly com os itens e o total" width="482" height="863" decoding="async"><img src="img/pooly-3.webp" alt="Tela do cliente no Pooly com os serviços pagos e o botão de recibo" width="479" height="862" decoding="async"></div>
+      <div class="dhead">
+        <div class="icon"><div class="face"><img src="img/icone-pooly.webp" alt="Ícone do Pooly"></div></div>
+        <div><h2 id="h-pooly">Pooly</h2><p>Gestão para piscineiros.</p>
+          <div class="dmeta"><span class="chip">Em uso real · desde out/2026</span><span class="tool">Web app</span><span class="tool">Gerador de PDF</span><span class="tool">Claude</span></div></div>
+      </div>
+      <div class="cols">
+        <div class="block"><h3>O problema</h3><ul class="points">
+          <li>Meu pai é piscineiro e anotava tudo no WhatsApp e de cabeça.</li>
+          <li>Sem saber direito quem devia e quanto, deixava de cobrar e perdia dinheiro.</li>
+          <li>Recibos e orçamentos dependiam de mim: ele pedia umas 4 vezes por semana, e cada um me tomava pelo menos 1 hora.</li>
+          <li>Para não me atrapalhar, ele evitava pedir, e aí o cliente ficava sem recibo e sem orçamento.</li>
+          <li>Na prática, eu era o gerador de PDF dele.</li></ul></div>
+        <div class="block"><h3>O que ele faz</h3><ul class="points">
+          <li>Agenda dos atendimentos.</li>
+          <li>Clientes cadastrados num lugar só.</li>
+          <li>Cobranças, com filtro de quem está devendo e quanto.</li>
+          <li>Recibos e orçamentos em PDF, que ele mesmo gera e personaliza.</li>
+          <li>Gastos organizados por categoria.</li>
+          <li>Desempenho de cada funcionário, para saber quem está dando lucro.</li></ul></div>
+      </div>
+      <div class="block"><h3>Resultado</h3><div class="stat"><b>4 h</b><span>por semana que voltaram pra mim</span></div><ul class="points"><li>Desde a entrega, ele emite recibos e orçamentos sozinho.</li></ul></div>
+      <div class="block"><h3>Próximos passos</h3><ul class="points">
+        <li>Banco de dados na nuvem.</li>
+        <li>Autenticação e login.</li>
+        <li>Sistema de pagamento.</li>
+        <li>Expandir o acesso para mais piscineiros.</li></ul></div>
+    </div>
+  </div>
+</template>
+
+<template id="t-beluga">
+  <div style="--m1:rgba(140,180,245,.5);--m2:rgba(200,180,240,.42);--m3:rgba(240,220,235,.44);--acc:#6A7BE6">
+    <div class="media"><iframe src="https://www.youtube-nocookie.com/embed/4w_FWZ0Y9Wc?rel=0&amp;playsinline=1" title="Trailer do Beluga" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+    <div class="detail">
+      <div class="shots"><img src="img/beluga-1.webp" alt="Tela de análise do Beluga com os gastos por categoria no mês" width="482" height="863" decoding="async"><img src="img/beluga-2.webp" alt="Tela inicial do Beluga com o saldo e quanto cada pessoa da família ajudou" width="482" height="861" decoding="async"><img src="img/beluga-3.webp" alt="Tela de importação de extrato do Beluga, confirmando um lançamento por vez" width="482" height="863" decoding="async"></div>
+      <div class="dhead">
+        <div class="icon"><div class="face"><img src="img/icone-beluga.webp" alt="Ícone do Beluga"></div></div>
+        <div><h2 id="h-beluga">Beluga</h2><p>Controle financeiro pessoal.</p>
+          <div class="dmeta"><span class="chip">6 usuários · 2026</span><span class="tool">Web app</span><span class="tool">Netlify</span><span class="tool">pdf.js</span></div></div>
+      </div>
+      <div class="cols">
+        <div class="block"><h3>Como começou</h3><ul class="points">
+          <li>Eu queria organizar meus gastos e mostrar aos meus pais onde cada um me ajudava.</li>
+          <li>Foi a primeira coisa que construí com IA.</li></ul></div>
+        <div class="block"><h3>O que ele faz</h3><ul class="points">
+          <li>Cada pessoa que ajuda tem um perfil. Dá para marcar se foi um Pix dela, se ela pagou direto ou se o gasto foi dividido.</li>
+          <li>Mostra quanto cada pessoa da família contribuiu no mês e para onde o dinheiro foi.</li>
+          <li>Análise por categoria, com gráfico e filtro de período.</li>
+          <li>Limite mensal, também visto por dia.</li>
+          <li>Relatório em PDF para mostrar a cada pessoa quanto ela ajudou.</li>
+          <li>Média de gasto diário, limite mensal e importação de extrato vieram de pedidos de quem usa.</li></ul></div>
+      </div>
+      <div class="block"><h3>Importação de extrato</h3><ul class="points">
+        <li>Aceita PDF, OFX e CSV, do jeito que o banco exporta.</li>
+        <li>Encontra data, descrição e valor mesmo quando cada banco escreve de um jeito.</li>
+        <li>Limpa o nome do lançamento: tira códigos, CPF/CNPJ e prefixos como “Compra no débito”.</li>
+        <li>Sugere a categoria e lembra como você chamou aquele lugar da última vez.</li>
+        <li>Avisa quando um lançamento parece já estar registrado, para não duplicar.</li>
+        <li>Você confirma item por item antes de entrar no app.</li></ul></div>
+      <div class="block"><h3>Decisões</h3><ul class="points">
+        <li>A primeira versão lia o extrato com IA, mas não funcionava bem. Troquei por regras próprias que rodam no aparelho: o extrato não sai dali, e o mesmo arquivo dá sempre o mesmo resultado.</li>
+        <li>Os dados ficam salvos no próprio aparelho, com um backup para baixar e restaurar.</li>
+        <li>É dado financeiro, e eu ainda estou aprendendo backend e autenticação.</li></ul></div>
+    </div>
+  </div>
+</template>
+
+<template id="t-urbas">
+  <div style="--m1:rgba(120,200,160,.48);--m2:rgba(110,205,220,.38);--m3:rgba(235,210,160,.42);--acc:#2E9E6A">
+    <div class="media"><iframe src="https://www.youtube-nocookie.com/embed/zOyABIb_3h0?rel=0&amp;playsinline=1" title="Trailer do Urbas" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+    <div class="detail">
+      <div class="shots"><img src="img/urbas-1.webp" alt="Tela de lotes e cultivos do Urbas, com o mapa dos canteiros" width="482" height="863" decoding="async"><img src="img/urbas-2.webp" alt="Tela de registro de ocorrência do Urbas, com fotos e diagnóstico simulado" width="482" height="863" decoding="async"><img src="img/urbas-3.webp" alt="Tela do Urbas sugerindo adiar a rega por previsão de chuva" width="482" height="863" decoding="async"></div>
+      <div class="dhead">
+        <div class="icon"><div class="face"><img src="img/icone-urbas.webp" alt="Ícone do Urbas"></div></div>
+        <div><h2 id="h-urbas">Urbas</h2><p>Assistência ao cultivo de hortas urbanas.</p>
+          <div class="dmeta"><span class="chip wait">Projeto em grupo · 2026</span><span class="tool">HTML</span><span class="tool">CSS</span><span class="tool">JavaScript</span><span class="tool">SVG</span></div></div>
+      </div>
+      <div class="cols">
+        <div class="block"><h3>O contexto</h3><ul class="points">
+          <li>Tecnologias digitais para hortas urbanas.</li>
+          <li>Quando não encontramos hortas comunitárias para o piloto, propus pequenas hortas comerciais, e o grupo seguiu por esse caminho.</li></ul></div>
+        <div class="block"><h3>Minha parte: todo o digital</h3><ul class="points">
+          <li>Design e desenvolvimento do app.</li>
+          <li>Implantação do app nas hortas.</li>
+          <li>Explicação do app para os produtores.</li>
+          <li>Integração com os dados que vão chegar dos sensores.</li>
+          <li>Adaptação da interface e das ferramentas às necessidades das hortas atendidas.</li></ul></div>
+      </div>
+      <div class="block"><h3>O que o app já tem</h3><ul class="points">
+        <li>Painel de saúde da horta, com alertas do que precisa de atenção.</li>
+        <li>Clima e umidade do solo dos últimos 7 dias.</li>
+        <li>Irrigação: recomendação conforme umidade e clima, próxima rega e agenda de regas por lote.</li>
+        <li>Mapa dos canteiros em medidas reais, com editor de arrastar.</li>
+        <li>Lotes e cultivos.</li>
+        <li>Calendário de manejo por lote.</li>
+        <li>Registro de ocorrências (praga, doença, nutrientes, solo seco) por lote, com foto.</li>
+        <li>Diagnóstico pela câmera, ainda simulado até a API ser ligada.</li>
+        <li>Participantes da horta e histórico de quem fez cada tarefa.</li>
+        <li>Painel de sensores e válvulas.</li>
+        <li>Notificações e mais de uma horta na mesma conta.</li></ul></div>
+      <div class="cols">
+        <div class="block"><h3>Onde está hoje</h3><ul class="points">
+          <li>Interface concluída e validada com dados de teste.</li>
+          <li>Integração com os sensores e adaptação às hortas ainda em andamento.</li>
+          <li>O app ainda não tem uso real.</li></ul></div>
+        <div class="block"><h3>Os outros integrantes</h3><p class="quip">Eles cuidam do que tem raiz; eu cuido do que tem tela.</p><ul class="points">
+          <li>Plantam as mudas nos canteiros.</li>
+          <li>Instalam os sistemas físicos.</li>
+          <li>Me explicam como os dados são gerados.</li></ul></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+(() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = matchMedia('(hover: hover)').matches;
+  const order = ['goliad', 'pooly', 'beluga', 'urbas'];
+  const names = { goliad: 'Goliad', pooly: 'Pooly', beluga: 'Beluga', urbas: 'Urbas' };
+  const html = document.documentElement;
+
+  // nome aparece na barra depois que o título sai da tela
+  const nav = document.getElementById('nav'), title = document.getElementById('titulo');
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => nav.classList.toggle('named', !e.isIntersecting), { rootMargin: '-60px 0px 0px 0px' }).observe(title);
+
+  // inclinação dos cards
+  if (!reduced && canHover) document.querySelectorAll('.tile').forEach(tile => {
+    tile.addEventListener('pointermove', e => {
+      const r = tile.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      tile.style.setProperty('--ty', (x * 7).toFixed(2) + 'deg'); tile.style.setProperty('--tx', (-y * 7).toFixed(2) + 'deg');
+    });
+    tile.addEventListener('pointerleave', () => {
+      ['--tx', '--ty'].forEach(p => tile.style.setProperty(p, '0deg'));
+    });
+  });
+
+  // folha do projeto
+  const dlg = document.getElementById('sheet'), content = dlg.querySelector('.content'), scroller = dlg.querySelector('.scroll');
+  const [prevBtn, nextBtn] = dlg.querySelectorAll('.pager button');
+  let cur = null, opener = null;
+  const more = dlg.querySelector('.more');
+  const checkMore = () => more.classList.toggle('gone', scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 140);
+  scroller.addEventListener('scroll', checkMore, { passive: true });
+  more.querySelector('span').addEventListener('click', () => scroller.scrollBy({ top: scroller.clientHeight * .7, behavior: reduced ? 'auto' : 'smooth' }));
+  const fill = id => {
+    content.replaceChildren(document.getElementById('t-' + id).content.cloneNode(true));
+    const i = order.indexOf(id), p = order[(i + 3) % 4], n = order[(i + 1) % 4];
+    prevBtn.textContent = '← ' + names[p]; nextBtn.textContent = names[n] + ' →';
+    dlg.setAttribute('aria-labelledby', 'h-' + id); cur = id; scroller.scrollTop = 0;
+    requestAnimationFrame(checkMore);
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  };
+  // animação: a folha sobe e assenta; o conteúdo entra em cascata saindo do desfoque (mesma linguagem da troca de projeto)
+  const scrim = document.querySelector('.scrim');
+  const SPRING = 'cubic-bezier(.32,.72,0,1)';
+  const isPhone = () => matchMedia('(max-width: 760px)').matches;
+  let busy = false, switching = false;
+  const cardClip = () => {
+    const tile = cur && document.querySelector('[data-open="' + cur + '"]');
+    if (!tile || isPhone()) return null;
+    const a = tile.getBoundingClientRect(), b = dlg.getBoundingClientRect();
+    if (a.bottom < 0 || a.top > innerHeight || !b.width) return null;
+    const c = v => Math.max(0, v).toFixed(1) + 'px';
+    const top = Math.min(a.top - b.top, b.height - 80), bottom = Math.max(b.bottom - a.bottom, 0);
+    return 'inset(' + c(top) + ' ' + c(b.right - a.right) + ' ' + c(Math.min(bottom, b.height - top - 80)) + ' ' + c(a.left - b.left) + ' round 32px)';
+  };
+  const parts = () => [...content.querySelectorAll('.media, .detail > *'), dlg.querySelector('.pager')];
+  const cascade = (delay, blur) => parts().forEach((el, i) => {
+    const media = el.classList.contains('media');
+    el.animate([
+      { opacity: 0, transform: media ? 'scale(1.06)' : 'translate3d(0,22px,0)', filter: blur ? 'blur(8px)' : 'none' },
+      { opacity: 1, transform: 'none', filter: 'none' }
+    ], { duration: media ? 700 : 560, delay: delay + (media ? 0 : i * 55), easing: SPRING, fill: 'backwards' });
+  });
+  const open = (id, from) => {
+    if (busy) return;
+    opener = from || null; fill(id);
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    html.classList.add('locked');
+    scrim.classList.add('on');
+    scrim.getAnimations().forEach(a => a.cancel());
+    scrim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reduced ? 150 : 480, easing: 'ease-out', fill: 'forwards' });
+    if (reduced) { dlg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 }); return; }
+    if (isPhone()) {
+      dlg.animate([{ transform: 'translate3d(0,100%,0)' }, { transform: 'none' }], { duration: 560, easing: SPRING });
+      cascade(90, true);
+      return;
+    }
+    dlg.animate([{ transform: 'translate3d(0,56px,0) scale(.94)', opacity: 0 }, { opacity: 1, offset: .35 }, { transform: 'none', opacity: 1 }], { duration: 700, easing: SPRING });
+    cascade(90, true);
+  };
+  const close = () => {
+    if (busy || !dlg.open) return;
+    busy = true;
+    let finished = false;
+    const done = () => {
+      if (finished) return; finished = true;
+      if (dlg.open) dlg.close();
+      dlg.getAnimations().forEach(a => a.cancel());
+      content.getAnimations({ subtree: true }).forEach(a => a.cancel());
+      scrim.classList.remove('on');
+      scrim.getAnimations().forEach(a => a.cancel());
+      html.classList.remove('locked');
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+      const back = cur && document.querySelector('[data-open="' + cur + '"]');
+      if (back) back.focus({ preventScroll: true });
+      busy = false;
+    };
+    setTimeout(done, reduced ? 250 : 560);
+    scrim.getAnimations().forEach(a => a.cancel());
+    scrim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 120 : 380, easing: 'ease-in', fill: 'forwards' });
+    if (reduced) { dlg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120, fill: 'forwards' }).onfinish = done; return; }
+    if (isPhone()) { dlg.animate([{ transform: 'none' }, { transform: 'translate3d(0,100%,0)' }], { duration: 400, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' }).onfinish = done; return; }
+    content.animate([{ opacity: 1, filter: 'blur(0px)', transform: 'none' }, { opacity: 0, filter: 'blur(10px)', transform: 'scale(.985)' }], { duration: 220, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    dlg.animate([{ transform: 'none', opacity: 1 }, { opacity: 1, offset: .35 }, { transform: 'translate3d(0,40px,0) scale(.95)', opacity: 0 }], { duration: 420, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }).onfinish = done;
+  };
+  // troca de projeto: o atual se dissolve em desfoque e o próximo entra em cascata
+  const go = d => {
+    if (busy || switching) return;
+    const id = order[(order.indexOf(cur) + d + 4) % 4];
+    if (reduced) return fill(id);
+    switching = true;
+    const out = content.animate([{ opacity: 1, filter: 'blur(0px)', transform: 'none' }, { opacity: 0, filter: 'blur(10px)', transform: 'scale(.985)' }], { duration: 210, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    out.onfinish = () => {
+      fill(id); out.cancel();
+      switching = false;
+      if (busy) return;
+      cascade(0, true);
+    };
+  };
+  document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => open(b.dataset.open, b)));
+  dlg.querySelector('.close').addEventListener('click', close);
+  prevBtn.addEventListener('click', () => go(-1)); nextBtn.addEventListener('click', () => go(1));
+  dlg.addEventListener('cancel', e => { e.preventDefault(); close(); });
+  dlg.addEventListener('close', () => {
+    if (busy) return;
+    dlg.getAnimations().forEach(a => a.cancel());
+    scrim.getAnimations().forEach(a => a.cancel());
+    scrim.classList.remove('on');
+    html.classList.remove('locked');
+  });
+  dlg.addEventListener('click', e => { if (e.target === dlg) close(); });
+  const h = location.hash.slice(1); if (order.includes(h)) open(h);
+})();
+</script>
+
+</body></html>
